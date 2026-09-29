@@ -16,15 +16,23 @@
                     colors: {
                         netlify: '#00C7B7',
                         netlifyDark: '#009E91',
+                        netlifyLight: '#E5F9F8',
                         github: '#24292e',
-                        githubDark: '#1b1f23'
+                        githubDark: '#1b1f23',
+                        githubLight: '#F6F8FA',
+                        primary: '#6366f1', // Indigo 500
+                        primaryDark: '#4f46e5', // Indigo 600
+                        secondary: '#f43f5e', // Rose 500
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-pattern': "url('data:image/svg+xml,%3Csvg width=\\'60\\' height=\\'60\\' viewBox=\\'0 0 60 60\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cg fill=\\'none\\' fill-rule=\\'evenodd\\'%3E%3Cg fill=\\'%239C92AC\\' fill-opacity=\\'0.1\\'%3E%3Cpath d=\\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom scrollbar for a cleaner look */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -42,192 +50,387 @@
         }
         
         .step-card {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
         }
         
         .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: transparent;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
             opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .step-card:hover::before {
+            opacity: 1;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        .netlify-card:hover { background: linear-gradient(to bottom right, #ffffff, #f0fdfa); border-color: #99f6e4; }
+        .github-card:hover { background: linear-gradient(to bottom right, #ffffff, #f8fafc); border-color: #cbd5e1; }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .pulse-ring {
+            animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 199, 183, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 199, 183, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 199, 183, 0); }
+        }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen bg-hero-pattern relative selection:bg-primary selection:text-white">
 
-    <!-- Navigation Bar -->
-    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+    <nav class="glass-nav shadow-sm sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-blue-600 p-2 rounded-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="bg-gradient-to-tr from-primary to-primaryDark p-2 rounded-xl shadow-lg group-hover:shadow-primary/50 transition-all duration-300 transform group-hover:rotate-12">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <span class="font-bold text-xl text-slate-900 tracking-tight">DeployDash</span>
+                    <span class="font-extrabold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight">DeployDash</span>
                 </div>
-                <div class="hidden sm:flex space-x-8">
-                    <a href="#intro" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">簡介</a>
-                    <a href="#netlify" class="text-slate-500 hover:text-netlify px-3 py-2 text-sm font-medium transition-colors">Netlify 教學</a>
-                    <a href="#github" class="text-slate-500 hover:text-github px-3 py-2 text-sm font-medium transition-colors">GitHub Pages 教學</a>
+                <div class="hidden sm:flex space-x-1 bg-slate-100/50 p-1 rounded-full border border-slate-200">
+                    <a href="#intro" class="text-slate-600 hover:text-primary hover:bg-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all shadow-sm opacity-80 hover:opacity-100">簡介</a>
+                    <a href="#netlify" class="text-slate-600 hover:text-netlify hover:bg-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all shadow-sm opacity-80 hover:opacity-100">Netlify</a>
+                    <a href="#github" class="text-slate-600 hover:text-github hover:bg-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all shadow-sm opacity-80 hover:opacity-100">GitHub Pages</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
         
+        <!-- Background decorative elements -->
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-secondary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+
         <!-- Header / Intro Section -->
-        <header id="intro" class="mb-12 text-center fade-in" style="animation-delay: 0.1s;">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">靜態網頁發布指南</h1>
-            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                你可以免費且快速地將自己寫好的靜態網頁（HTML、CSS、JS）發布到網路上。以下是最簡單的純網頁操作步驟，不需要使用複雜的終端機指令。
+        <header id="intro" class="mb-20 text-center fade-in-up relative z-10" style="animation-delay: 0.1s;">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-primary font-medium text-sm mb-6 shadow-sm">
+                <span class="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
+                100% 免費靜態網頁託管
+            </div>
+            <h1 class="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+                一鍵發布，<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">閃電上線</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                告別複雜的終端機指令！這份圖文並茂的指南，將帶你用最直覺的拖曳與點擊，輕鬆將 HTML、CSS、JS 網頁發布到全世界。
             </p>
         </header>
 
-        <!-- Netlify Section -->
-        <section id="netlify" class="mb-20 fade-in" style="animation-delay: 0.2s;">
-            <div class="flex items-center space-x-4 mb-8 border-b border-slate-200 pb-4">
-                <!-- Netlify SVG Logo (Simulated for generic use if exact official unavailable, using a geometric shape representing the brand) -->
-                <svg class="w-12 h-12 text-netlify" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5.556 2.055L2 14.5l10.889-4.222L5.556 2.055zM22 14.5l-3.556-12.445-7.333 8.223L22 14.5zM12.889 10.278L2 14.5l10.889 7.444L22 14.5l-9.111-4.222z"/>
-                </svg>
-                <h2 class="text-3xl font-bold text-slate-800">使用 Netlify 發布網頁</h2>
-                <span class="bg-netlify/10 text-netlifyDark text-xs font-semibold px-2.5 py-0.5 rounded-full border border-netlify/20">推薦新手</span>
+        <section id="netlify" class="mb-28 fade-in-up relative z-10" style="animation-delay: 0.2s;">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b-2 border-slate-200 pb-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-white rounded-2xl shadow-md flex items-center justify-center border border-slate-100 floating-icon">
+                        <svg class="w-8 h-8 text-netlify" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.556 2.055L2 14.5l10.889-4.222L5.556 2.055zM22 14.5l-3.556-12.445-7.333 8.223L22 14.5zM12.889 10.278L2 14.5l10.889 7.444L22 14.5l-9.111-4.222z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Netlify 部署指南</h2>
+                        <p class="text-slate-500 mt-1 font-medium">極速拖曳，無腦發布</p>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="bg-gradient-to-r from-netlify to-netlifyDark text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md shadow-netlify/30">推薦新手首選 🌟</span>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+                <!-- Connecting Line Background (Desktop only) -->
+                <div class="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -z-10 transform -translate-y-1/2 rounded-full"></div>
+
                 <!-- Step 1 -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-netlify/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    <div class="w-10 h-10 rounded-full bg-netlify text-white flex items-center justify-center font-bold text-lg mb-4 relative z-10">1</div>
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2 relative z-10">登入與專案頁面</h3>
-                    <p class="text-slate-600 text-sm relative z-10">
-                        登入 Netlify 並進入主畫面。<br>
-                        點擊左上角的 <strong>「Projects」</strong>（專案）進入專案管理列表。
-                    </p>
+                <div class="step-card netlify-card bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-netlify/5 rounded-full transition-transform duration-500 group-hover:scale-150"></div>
+                    
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div class="w-12 h-12 rounded-2xl bg-netlify/10 text-netlify flex items-center justify-center font-black text-xl border border-netlify/20 shadow-inner group-hover:bg-netlify group-hover:text-white transition-colors duration-300">1</div>
+                        <div class="bg-slate-100 p-2 rounded-lg text-slate-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg></div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 relative z-10">登入與專案管理</h3>
+                    <div class="space-y-3 relative z-10 text-slate-600">
+                        <p class="flex items-start">
+                            <span class="text-netlify mr-2 mt-0.5">•</span>
+                            <span>登入 Netlify 並進入主畫面。</span>
+                        </p>
+                        <p class="flex items-start">
+                            <span class="text-netlify mr-2 mt-0.5">•</span>
+                            <span>點擊左上角的 <strong class="text-slate-800 bg-slate-100 px-1.5 rounded">Projects</strong> (專案)。</span>
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-netlify/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    <div class="w-10 h-10 rounded-full bg-netlify text-white flex items-center justify-center font-bold text-lg mb-4 relative z-10">2</div>
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2 relative z-10">建立新專案</h3>
-                    <p class="text-slate-600 text-sm relative z-10">
-                        在畫面右上角，點擊青綠色的<br>
-                        <strong>「Add new project」</strong>（新增項目）按鈕。<br>
-                        <span class="text-xs text-slate-400 mt-2 block italic">（初次使用會跳過這個步驟）</span>
-                    </p>
+                <div class="step-card netlify-card bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden group lg:mt-8">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-netlify/5 rounded-full transition-transform duration-500 group-hover:scale-150"></div>
+                    
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div class="w-12 h-12 rounded-2xl bg-netlify/10 text-netlify flex items-center justify-center font-black text-xl border border-netlify/20 shadow-inner group-hover:bg-netlify group-hover:text-white transition-colors duration-300">2</div>
+                        <div class="bg-slate-100 p-2 rounded-lg text-slate-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 relative z-10">建立新專案</h3>
+                    <div class="space-y-3 relative z-10 text-slate-600">
+                        <p class="flex items-start">
+                            <span class="text-netlify mr-2 mt-0.5">•</span>
+                            <span>在畫面右上角，點擊青綠色的 <strong class="text-netlifyDark bg-netlifyLight px-1.5 py-0.5 rounded border border-netlify/20 shadow-sm">Add new project</strong> 按鈕。</span>
+                        </p>
+                        <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-100 text-amber-700 text-sm flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>初次使用此平台者，系統會自動跳過這個步驟，直接進入上傳畫面。</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Step 3 -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-netlify/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    <div class="w-10 h-10 rounded-full bg-netlify text-white flex items-center justify-center font-bold text-lg mb-4 relative z-10">3</div>
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2 relative z-10">拖曳資料夾上傳</h3>
-                    <ul class="text-slate-600 text-sm list-disc pl-4 space-y-1 relative z-10">
-                        <li>在 <span class="text-xs bg-slate-100 px-1 rounded">Upload your project files</span> 區塊找灰白色虛線框。</li>
-                        <li>選擇單一檔案或資料夾上傳。</li>
-                        <li>若詢問「Rename to index.html?」請選擇 <strong>「Rename and deploy」</strong>。</li>
-                    </ul>
+                <div class="step-card netlify-card bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-netlify/5 rounded-full transition-transform duration-500 group-hover:scale-150"></div>
+                    
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div class="w-12 h-12 rounded-2xl bg-netlify/10 text-netlify flex items-center justify-center font-black text-xl border border-netlify/20 shadow-inner group-hover:bg-netlify group-hover:text-white transition-colors duration-300">3</div>
+                        <div class="bg-slate-100 p-2 rounded-lg text-slate-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg></div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 relative z-10">上傳網頁檔案</h3>
+                    <div class="space-y-3 relative z-10 text-slate-600">
+                        <p class="flex items-start">
+                            <span class="text-netlify mr-2 mt-0.5">•</span>
+                            <span>在中央第3個區塊 <strong class="text-slate-800">Upload your project files</strong> 找到大虛線框。</span>
+                        </p>
+                        <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center bg-slate-50 my-2">
+                            <span class="text-sm text-slate-400 font-medium">Drop a project folder...</span><br>
+                            <span class="text-xs text-slate-500 mt-1 block">拖曳檔案至此，或點擊選擇檔案/資料夾</span>
+                        </div>
+                        <p class="flex items-start">
+                            <span class="text-netlify mr-2 mt-0.5">•</span>
+                            <span>若跳出「Rename to index.html?」，強烈建議選擇 <strong class="text-netlifyDark bg-netlifyLight px-1.5 rounded">Rename and deploy</strong>。</span>
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Step 4 -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-netlify/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    <div class="w-10 h-10 rounded-full bg-netlify text-white flex items-center justify-center font-bold text-lg mb-4 relative z-10">4</div>
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2 relative z-10">建立公開網址</h3>
-                    <ul class="text-slate-600 text-sm list-disc pl-4 space-y-1 relative z-10 mb-3">
-                        <li>點選「Make public」/「編輯(✏️)」。</li>
-                        <li>輸入想要的網址名稱 (限英文小寫、數字與 <code>-</code> )，按 ✅。</li>
-                        <li>點擊 <strong>「Make public」</strong> 儲存。</li>
-                    </ul>
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded text-xs font-medium flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        大功告成！點擊網址即可造訪。
+                <!-- Step 4 (Full Width in Grid) -->
+                <div class="step-card netlify-card bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group md:col-span-2 lg:col-span-3 lg:w-2/3 lg:mx-auto">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-netlify/5 rounded-bl-[100px] transition-transform duration-500 group-hover:scale-110"></div>
+                    
+                    <div class="flex items-center justify-between mb-6 relative z-10 border-b border-slate-100 pb-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-netlify text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-netlify/40 pulse-ring">4</div>
+                            <h3 class="text-2xl font-bold text-slate-900">自訂專屬網址並公開</h3>
+                        </div>
+                        <div class="bg-slate-100 p-3 rounded-xl text-slate-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                        <div class="space-y-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm mr-3">A</div>
+                                <p class="text-slate-600 mt-1">點選 <strong>「Make public」</strong> 或 <strong>編輯(✏️鉛筆圖示)</strong>。</p>
+                            </div>
+                            <div class="flex">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm mr-3">B</div>
+                                <div>
+                                    <p class="text-slate-600 mt-1">輸入想要的網址名稱並按 ✅ 確認。</p>
+                                    <p class="text-xs text-rose-500 mt-1 font-medium bg-rose-50 p-2 rounded inline-block">⚠️ 規則：限英文小寫、數字與連字號 <code>-</code></p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm mr-3">C</div>
+                                <p class="text-slate-600 mt-1">點擊 <strong>「Make public」</strong> 儲存設定。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col justify-center">
+                            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-6 text-center transform transition-transform hover:-translate-y-1 hover:shadow-md">
+                                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-emerald-800 mb-2">大功告成！網站已上線</h4>
+                                <p class="text-sm text-emerald-600 font-medium">您的公開網址已立即更新。<br>點擊產生的連結，就能馬上與世界分享您的作品！</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- GitHub Pages Section -->
-        <section id="github" class="mb-20 fade-in" style="animation-delay: 0.3s;">
-            <div class="flex items-center space-x-4 mb-8 border-b border-slate-200 pb-4">
-                <!-- GitHub SVG Logo -->
-                <svg class="w-11 h-11 text-github" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.699-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.253-.447-1.27.098-2.646 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.376.202 2.394.1 2.646.64.699 1.026 1.591 1.026 2.682 0 3.841-2.337 4.687-4.565 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/>
-                </svg>
-                <h2 class="text-3xl font-bold text-slate-800">使用 GitHub Pages 發布網頁</h2>
-                <span class="bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-300">開發者常用</span>
+        <section id="github" class="mb-20 fade-in-up relative z-10" style="animation-delay: 0.3s;">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b-2 border-slate-200 pb-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-white rounded-2xl shadow-md flex items-center justify-center border border-slate-100 floating-icon" style="animation-delay: 1s;">
+                        <svg class="w-8 h-8 text-github" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.699-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.253-.447-1.27.098-2.646 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.376.202 2.394.1 2.646.64.699 1.026 1.591 1.026 2.682 0 3.841-2.337 4.687-4.565 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">GitHub Pages 部署指南</h2>
+                        <p class="text-slate-500 mt-1 font-medium">工程師必備，與版本控制完美結合</p>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="bg-slate-800 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">開發者常用工具 💻</span>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Step 1 & 2 Combined in one card for layout balance -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-                    <div class="flex items-center mb-4 relative z-10 space-x-3">
-                        <div class="w-8 h-8 rounded bg-github text-white flex items-center justify-center font-bold">1</div>
-                        <span class="text-slate-400 font-bold">&rarr;</span>
-                        <div class="w-8 h-8 rounded bg-github text-white flex items-center justify-center font-bold">2</div>
-                        <h3 class="text-lg font-semibold text-slate-900 ml-2">登入與建立儲存庫</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                
+                <!-- Step 1 & 2 -->
+                <div class="step-card github-card bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-16 -top-16 w-48 h-48 bg-slate-50 rounded-full transition-transform duration-500 group-hover:scale-125"></div>
+                    
+                    <div class="flex items-center space-x-3 mb-6 relative z-10 border-b border-slate-100 pb-4">
+                        <div class="flex space-x-1">
+                            <div class="w-10 h-10 rounded-xl bg-github text-white flex items-center justify-center font-bold text-lg shadow-md">1</div>
+                            <div class="flex items-center px-1 text-slate-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-github text-white flex items-center justify-center font-bold text-lg shadow-md">2</div>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">登入與建立儲存庫</h3>
                     </div>
-                    <div class="space-y-4 relative z-10 text-slate-600 text-sm">
-                        <p>登入 GitHub，進入 Dashboard。</p>
-                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                            <ul class="list-decimal pl-4 space-y-2">
-                                <li>點擊右上角 <strong>「+」</strong> 圖示，選擇 <strong>「New repository」</strong>。</li>
-                                <li><strong>Repository name</strong> 填入 <code>帳號名稱.github.io</code><br>
-                                    <span class="text-xs text-slate-400">（例：帳號是 myweb，填 myweb.github.io）</span>
+                    
+                    <div class="relative z-10 space-y-5">
+                        <p class="text-slate-600 font-medium bg-slate-50 p-3 rounded-lg border border-slate-100"><span class="text-github mr-2">👉</span>登入 GitHub，進入個人 Dashboard。</p>
+                        
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-inner p-5">
+                            <h4 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Create a new repository
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <div class="w-6 h-6 rounded bg-slate-100 text-slate-500 text-xs flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">1</div>
+                                    <p class="text-sm text-slate-600">點擊右上角 <strong>「+」</strong> 圖示，選 <strong>「New repository」</strong>。</p>
                                 </li>
-                                <li>選擇 <strong>「Public」</strong>（必須公開）。</li>
-                                <li>點擊 <strong>「Create repository」</strong>。</li>
+                                <li class="flex items-start">
+                                    <div class="w-6 h-6 rounded bg-slate-100 text-slate-500 text-xs flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">2</div>
+                                    <div>
+                                        <p class="text-sm text-slate-600"><strong>Repository name</strong> 必須填寫為：</p>
+                                        <code class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-mono border border-blue-100 mt-1 inline-block">你的使用者名稱.github.io</code>
+                                        <p class="text-xs text-slate-400 mt-1">（例：帳號是 myweb，就填 myweb.github.io）</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="w-6 h-6 rounded bg-slate-100 text-slate-500 text-xs flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">3</div>
+                                    <p class="text-sm text-slate-600">設定權限選擇 <strong>「Public」</strong>（必須是公開的）。</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="w-6 h-6 rounded bg-slate-100 text-slate-500 text-xs flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">4</div>
+                                    <p class="text-sm text-slate-600">點擊下方綠色按鈕 <strong>「Create repository」</strong>。</p>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3 & 4 Combined -->
-                <div class="step-card bg-white rounded-2xl p-6 border border-slate-200 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-                    <div class="flex items-center mb-4 relative z-10 space-x-3">
-                        <div class="w-8 h-8 rounded bg-github text-white flex items-center justify-center font-bold">3</div>
-                        <span class="text-slate-400 font-bold">&rarr;</span>
-                        <div class="w-8 h-8 rounded bg-github text-white flex items-center justify-center font-bold">4</div>
-                        <h3 class="text-lg font-semibold text-slate-900 ml-2">上傳檔案與部署</h3>
-                    </div>
-                    <div class="space-y-4 relative z-10 text-slate-600 text-sm">
-                        <div class="border-l-2 border-github pl-3">
-                            <h4 class="font-medium text-slate-800 mb-1">上傳 (Quick setup)</h4>
-                            <p>點擊 <strong>「uploading an existing file」</strong>，上傳網頁檔案 (建議檔名為 <code>index.html</code>)，然後點擊 <strong>「Commit changes」</strong>。</p>
+                <!-- Step 3 & 4 -->
+                <div class="step-card github-card bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div class="absolute -right-16 -top-16 w-48 h-48 bg-slate-50 rounded-full transition-transform duration-500 group-hover:scale-125"></div>
+                    
+                    <div class="flex items-center space-x-3 mb-6 relative z-10 border-b border-slate-100 pb-4">
+                        <div class="flex space-x-1">
+                            <div class="w-10 h-10 rounded-xl bg-github text-white flex items-center justify-center font-bold text-lg shadow-md">3</div>
+                            <div class="flex items-center px-1 text-slate-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl bg-github text-white flex items-center justify-center font-bold text-lg shadow-md">4</div>
                         </div>
-                        <div class="border-l-2 border-github pl-3">
-                            <h4 class="font-medium text-slate-800 mb-1">部署 (Build and deployment)</h4>
-                            <p>進入儲存庫最右方 <strong>Settings</strong> > 左方選單 <strong>Pages</strong>。</p>
-                            <p class="mt-1">設定部署來源為 <strong>main 分支與根目錄</strong>，儲存後等待數分鐘即可造訪。</p>
+                        <h3 class="text-xl font-bold text-slate-900">上傳與設定部署</h3>
+                    </div>
+                    
+                    <div class="relative z-10 space-y-6">
+                        
+                        <!-- Step 3 inner -->
+                        <div class="relative pl-6 border-l-2 border-githubLight hover:border-github transition-colors">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-2 border-github"></div>
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center">
+                                進入 Quick setup，上傳檔案
+                            </h4>
+                            <div class="bg-slate-50 rounded-lg p-3 text-sm text-slate-600">
+                                <p class="mb-2">點擊 <strong>「uploading an existing file」</strong> 連結。</p>
+                                <p class="mb-2">上傳您的網頁檔案 <span class="bg-yellow-100 text-yellow-800 px-1 rounded text-xs">建議檔名為 index.html</span>。</p>
+                                <p>點擊下方的綠色按鈕 <strong>「Commit changes」</strong> 完成上傳。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 inner -->
+                        <div class="relative pl-6 border-l-2 border-githubLight hover:border-github transition-colors">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-2 border-github"></div>
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center">
+                                Build and deployment 設定
+                            </h4>
+                            <div class="bg-slate-50 rounded-lg p-3 text-sm text-slate-600">
+                                <div class="flex items-center text-xs text-slate-500 mb-2 font-mono bg-white border border-slate-200 p-1.5 rounded inline-block">
+                                    ⚙️ Settings > 📄 Pages
+                                </div>
+                                <p class="mb-2">在 Pages 設定頁面中，找到 <strong>Build and deployment</strong> 區塊。</p>
+                                <p>設定部署來源 (Source) 為 <strong>main</strong> 分支與 <strong>/ (root)</strong> 根目錄。</p>
+                                <p class="mt-2 text-primary font-medium text-xs flex items-center">
+                                    <svg class="w-4 h-4 mr-1 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    儲存後等待數分鐘，即可透過專屬網址造訪。
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Warning Alert -->
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm flex items-start">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-amber-500 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-5 rounded-2xl shadow-sm flex items-start transform transition-all hover:shadow-md">
+                <div class="flex-shrink-0 bg-white p-2 rounded-full shadow-sm border border-amber-100">
+                    <svg class="h-6 w-6 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-amber-800">注意事項</h3>
-                    <div class="mt-1 text-sm text-amber-700">
-                        若系統提供之專屬網址看不到網頁，有可能是您上傳檔名不是 <code>index.html</code>。此時可以自行輸入檔名於網址末尾（例如：<code>...github.io/你的檔名.html</code>）。
+                <div class="ml-4">
+                    <h3 class="text-base font-bold text-amber-900">故障排除注意</h3>
+                    <div class="mt-2 text-sm text-amber-800 leading-relaxed">
+                        若系統提供之專屬網址 <strong>看不到網頁內容（顯示 404 等錯誤）</strong>，最可能的原因是您上傳的主檔名不是 <code class="bg-amber-100 px-1 rounded font-mono text-amber-900 border border-amber-200">index.html</code>。<br>
+                        <strong>解決方案：</strong> 此時您可以自行在專屬網址末尾加上檔名來造訪（例如：<code class="bg-amber-100 px-1 rounded font-mono text-amber-900 border border-amber-200">...github.io/你的檔名.html</code>），或是回 GitHub 將首頁檔案重新命名為 index.html。
                     </div>
                 </div>
             </div>
@@ -235,18 +438,4 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-auto py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-sm text-slate-500">
-                建置於 <span id="currentYear"></span> · 靜態網頁發布指南
-            </p>
-        </div>
-    </footer>
-
-    <script>
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-    </script>
-</body>
-</html>
+    <footer class="bg-white/80 backdrop-blur-md border-t border-slate-200 mt-auto py-10 relative z-10">
